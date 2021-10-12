@@ -2,7 +2,7 @@ import isObject from '../utils/isObject.js';
 
 const convertValue = (value) => {
   if (isObject(value)) {
-    return '[comlex value]';
+    return '[complex value]';
   }
 
   if (typeof value === 'string') {
