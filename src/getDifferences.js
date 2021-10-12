@@ -1,4 +1,6 @@
-export default (object1, object2) => {
+import isObject from './utils/isObject.js';
+
+const getDifferences = (object1, object2) => {
   const differences = [];
 
   const keys = Array.from(
@@ -8,6 +10,15 @@ export default (object1, object2) => {
   keys.forEach((key) => {
     const value1 = object1[key];
     const value2 = object2[key];
+
+    if (isObject(value1) && isObject(value2)) {
+      differences.push({
+        type: 'NESTED',
+        key,
+        differences: getDifferences(value1, value2),
+      });
+      return;
+    }
 
     if (value1 === value2) {
       differences.push({
@@ -37,3 +48,5 @@ export default (object1, object2) => {
 
   return differences;
 };
+
+export default getDifferences;
