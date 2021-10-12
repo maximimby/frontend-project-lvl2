@@ -4,6 +4,9 @@
   "description": "Difference calculator - a program that determines the difference between two data structures",
   "main": "index.js",
   "type": "module",
+  "bin": {
+    "gendiff": "bin/gendiff.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/maximimby/frontend-project-lvl2/issues"
   },
-  "homepage": "https://github.com/maximimby/frontend-project-lvl2#readme"
+  "homepage": "https://github.com/maximimby/frontend-project-lvl2#readme",
+  "dependencies": {
+    "commander": "^8.2.0"
+  }
 }
