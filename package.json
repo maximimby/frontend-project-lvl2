@@ -1,0 +1,22 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "Difference calculator - a program that determines the difference between two data structures",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maximimby/frontend-project-lvl2.git"
+  },
+  "keywords": [
+    "hexlet"
+  ],
+  "author": "maximimby <maximimby@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maximimby/frontend-project-lvl2/issues"
+  },
+  "homepage": "https://github.com/maximimby/frontend-project-lvl2#readme"
+}
