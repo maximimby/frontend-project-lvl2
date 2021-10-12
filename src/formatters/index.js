@@ -1,7 +1,7 @@
 import stylish from './stylish.js';
 
 const formatters = {
-  stylish
+  stylish,
 };
 
 export default formatters;

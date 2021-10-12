@@ -2,7 +2,7 @@ export default (object1, object2) => {
   const differences = [];
 
   const keys = Array.from(
-    new Set([...Object.keys(object1), ...Object.keys(object2)])
+    new Set([...Object.keys(object1), ...Object.keys(object2)]),
   ).sort();
 
   keys.forEach((key) => {
@@ -13,7 +13,7 @@ export default (object1, object2) => {
       differences.push({
         type: 'NOT_CHANGED',
         key,
-        value: value1
+        value: value1,
       });
       return;
     }
@@ -22,7 +22,7 @@ export default (object1, object2) => {
       differences.push({
         type: 'REMOVED',
         key,
-        value: value1
+        value: value1,
       });
     }
 
@@ -30,7 +30,7 @@ export default (object1, object2) => {
       differences.push({
         type: 'ADDED',
         key,
-        value: value2
+        value: value2,
       });
     }
   });
