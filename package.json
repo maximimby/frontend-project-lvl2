@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/maximimby/frontend-project-lvl2#readme",
   "dependencies": {
-    "commander": "^8.2.0"
+    "commander": "^8.2.0",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
     "@jest/globals": "^27.2.5",
