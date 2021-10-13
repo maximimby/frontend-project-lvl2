@@ -14,28 +14,41 @@ const convertValue = (value) => {
 
 const convertKey = (key, prefix) => [...prefix, key].join('.');
 
-const plain = (differences, prefix = []) => {
-  const array = [];
+const plain = (differences, prefix = []) => differences
+  .reduce((acc, value, index) => {
+    const lastIndex = acc.length - 1;
+    const previousNewValue = acc[lastIndex];
 
-  const convertedDifferences = [];
+    if (previousNewValue?.type === 'UPDATED' && !previousNewValue?.previous) {
+      return acc.map((item, i) => {
+        if (i === lastIndex) {
+          return {
+            ...item,
+            previous: true,
+          };
+        }
 
-  for (let i = 0; i < differences.length; i += 1) {
-    const diff = differences[i];
-    const index = i;
-    if (diff.type === 'REMOVED' && differences[index + 1]?.type === 'ADDED' && differences[index + 1]?.key === diff.key) {
-      convertedDifferences.push({
-        type: 'UPDATED',
-        key: diff.key,
-        value1: diff.value,
-        value2: differences[index + 1].value,
+        return item;
       });
-      i += 1;
-    } else {
-      convertedDifferences.push(diff);
     }
-  }
 
-  convertedDifferences.forEach(({
+    const nextValue = differences[index + 1];
+
+    if (value.type === 'REMOVED' && nextValue?.type === 'ADDED' && nextValue?.key === value.key) {
+      return [
+        ...acc,
+        {
+          type: 'UPDATED',
+          key: value.key,
+          value1: value.value,
+          value2: nextValue.value,
+        },
+      ];
+    }
+
+    return [...acc, value];
+  }, [])
+  .reduce((acc, {
     type,
     key,
     value,
@@ -44,17 +57,23 @@ const plain = (differences, prefix = []) => {
     differences: nestedDifferences,
   }) => {
     if (type === 'NESTED') {
-      array.push(plain(nestedDifferences, [...prefix, key]));
-    } else if (type === 'UPDATED') {
-      array.push(`Property '${convertKey(key, prefix)}' was updated. From ${convertValue(value1)} to ${convertValue(value2)}`);
-    } else if (type === 'REMOVED') {
-      array.push(`Property '${convertKey(key, prefix)}' was removed`);
-    } else if (type === 'ADDED') {
-      array.push(`Property '${convertKey(key, prefix)}' was added with value: ${convertValue(value)}`);
+      return [...acc, plain(nestedDifferences, [...prefix, key])];
     }
-  });
+    if (type === 'UPDATED') {
+      return [
+        ...acc,
+        `Property '${convertKey(key, prefix)}' was updated. From ${convertValue(value1)} to ${convertValue(value2)}`,
+      ];
+    }
+    if (type === 'REMOVED') {
+      return [...acc, `Property '${convertKey(key, prefix)}' was removed`];
+    }
+    if (type === 'ADDED') {
+      return [...acc, `Property '${convertKey(key, prefix)}' was added with value: ${convertValue(value)}`];
+    }
 
-  return array.join('\n');
-};
+    return acc;
+  }, [])
+  .join('\n');
 
 export default plain;

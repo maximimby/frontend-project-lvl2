@@ -11,11 +11,16 @@ const addPadding = (string) => {
 
 const convertValueToString = (value) => {
   if (isObject(value)) {
-    const array = [];
+    // const array = [];
 
-    Object.entries(value).forEach(([key, val]) => {
-      array.push(`  ${key}: ${isObject(val) ? convertValueToString(val) : val}`);
-    });
+    const array = Object.entries(value).reduce((acc, [key, val]) => [
+      ...acc,
+      `  ${key}: ${isObject(val) ? convertValueToString(val) : val}`,
+    ], []);
+
+    // Object.entries(value).forEach(([key, val]) => {
+    //   array.push(`  ${key}: ${isObject(val) ? convertValueToString(val) : val}`);
+    // });
 
     return addPadding(`{\n${array.map((string) => `  ${string}`).join('\n')}\n}`);
   }
@@ -24,23 +29,27 @@ const convertValueToString = (value) => {
 };
 
 const stylish = (differences) => {
-  const array = [];
-  differences.forEach(({
+  const array = differences.reduce((acc, {
     type,
     key,
     value,
     differences: nestedDifferences,
   }) => {
     if (type === 'NESTED') {
-      array.push(`  ${key}: ${addPadding(stylish(nestedDifferences))}`);
-    } else if (type === 'NOT_CHANGED') {
-      array.push(`  ${key}: ${convertValueToString(value)}`);
-    } else if (type === 'REMOVED') {
-      array.push(`- ${key}: ${convertValueToString(value)}`);
-    } else if (type === 'ADDED') {
-      array.push(`+ ${key}: ${convertValueToString(value)}`);
+      return [...acc, `  ${key}: ${addPadding(stylish(nestedDifferences))}`];
     }
-  });
+    if (type === 'NOT_CHANGED') {
+      return [...acc, `  ${key}: ${convertValueToString(value)}`];
+    }
+    if (type === 'REMOVED') {
+      return [...acc, `- ${key}: ${convertValueToString(value)}`];
+    }
+    if (type === 'ADDED') {
+      return [...acc, `+ ${key}: ${convertValueToString(value)}`];
+    }
+
+    return acc;
+  }, []);
   return `{\n${array.map((string) => `  ${string}`).join('\n')}\n}`;
 };
 
