@@ -1,7 +1,9 @@
 import isObject from '../utils/isObject.js';
 
 const addPadding = (string) => {
-  const [firstLine, ...otherLines] = string.split('\n');
+  const stringSplit = string.split('\n');
+  const firstLine = stringSplit[0];
+  const otherLines = stringSplit.slice(1);
 
   return [
     firstLine,
@@ -11,16 +13,10 @@ const addPadding = (string) => {
 
 const convertValueToString = (value) => {
   if (isObject(value)) {
-    // const array = [];
-
     const array = Object.entries(value).reduce((acc, [key, val]) => [
       ...acc,
       `  ${key}: ${isObject(val) ? convertValueToString(val) : val}`,
     ], []);
-
-    // Object.entries(value).forEach(([key, val]) => {
-    //   array.push(`  ${key}: ${isObject(val) ? convertValueToString(val) : val}`);
-    // });
 
     return addPadding(`{\n${array.map((string) => `  ${string}`).join('\n')}\n}`);
   }
